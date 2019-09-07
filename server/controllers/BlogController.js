@@ -8,9 +8,9 @@ let _blogService = new BlogService().repository
 export default class BlogController {
   constructor() {
     this.router = express.Router()
-      .use(Authorize.authenticated)
       .get('', this.getAll)
       .get('/:id', this.getById)
+      .use(Authorize.authenticated)
       .post('', this.create)
       .put('/:id', this.edit)
       .delete('/:id', this.delete)

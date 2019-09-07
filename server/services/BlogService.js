@@ -6,6 +6,7 @@ const _model = new Schema({
   title: { type: String, maxlength: 60, required: true },
   summary: { type: String, maxlength: 120, required: true },
   authorId: { type: ObjectId, ref: 'User', required: true },
+  authorName: { type: String, required: true },
   img: { type: String, required: true },
   body: { type: String, required: true }
 }, { timestamps: true })
