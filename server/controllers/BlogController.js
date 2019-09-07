@@ -25,6 +25,14 @@ export default class BlogController {
     }
   }
 
-
+  async create(req, res, next) {
+    try {
+      req.body.author._id = req.session.uid
+      let data = await _blogService.create(req.body)
+      res.send(data)
+    } catch (error) {
+      next(error)
+    }
+  }
 
 }
