@@ -2,9 +2,11 @@ import express from 'express'
 import ValueService from '../services/ValueService';
 import { Authorize } from '../middleware/authorize.js'
 import BlogService from '../services/BlogService';
+import UserService from '../services/UserService';
 import { EOF } from 'dns';
 
 let _blogService = new BlogService().repository
+let _userService = new UserService().repository
 
 export default class BlogController {
   constructor() {
@@ -20,6 +22,7 @@ export default class BlogController {
   async getAll(req, res, next) {
     try {
       let data = await _blogService.find({})
+        .populate('author._id', 'author.name')
       return res.send(data)
     } catch (error) {
       next(error)
@@ -40,7 +43,12 @@ export default class BlogController {
 
   async create(req, res, next) {
     try {
-      req.body.author._id = req.session.uid
+      let user = await _userService.findById(req.session.uid);
+      req.body.author = {
+        _id: req.session.uid,
+        name: user.get('name')
+      }
+
       let data = await _blogService.create(req.body)
       res.send(data)
     } catch (error) {
@@ -50,7 +58,7 @@ export default class BlogController {
 
   async edit(req, res, next) {
     try {
-      let data = await _blogService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
+      let data = await _blogService.findOneAndUpdate({ _id: req.params.id, }, req.body, { new: true })
       if (data) {
         return res.send(data)
       }
