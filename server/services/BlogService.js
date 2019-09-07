@@ -6,9 +6,10 @@ const _model = new Schema({
   title: { type: String, maxlength: 60, required: true },
   summary: { type: String, maxlength: 120, required: true },
   author: {
-    _id: { type: ObjectId, ref: 'User', required: true },
+    id: { type: ObjectId, ref: 'User', required: true },
     name: { type: String, required: true }
   },
+  authorId: { type: ObjectId, ref: 'User', required: true },
   img: { type: String, required: true },
   body: { type: String, required: true }
 }, { timestamps: true })
