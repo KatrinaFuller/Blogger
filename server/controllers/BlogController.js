@@ -3,16 +3,18 @@ import ValueService from '../services/ValueService';
 import { Authorize } from '../middleware/authorize.js'
 import BlogService from '../services/BlogService';
 import UserService from '../services/UserService';
-import { EOF } from 'dns';
+import CommentService from '../services/CommentService';
 
 let _blogService = new BlogService().repository
 let _userService = new UserService().repository
+let _commentService = new CommentService().repository
 
 export default class BlogController {
   constructor() {
     this.router = express.Router()
       .get('', this.getAll)
       .get('/:id', this.getById)
+      .get('/:id/comments', this.getComments)
       .use(Authorize.authenticated)
       .post('', this.create)
       .put('/:id', this.edit)
@@ -36,6 +38,16 @@ export default class BlogController {
         throw new Error("Invalid Id")
       }
       res.send(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getComments(req, res, next) {
+    try {
+      let data = await _commentService.find({ blogId: req.params.id })
+        .populate('blogId', 'name')
+      return res.send(data)
     } catch (error) {
       next(error)
     }

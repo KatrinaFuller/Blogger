@@ -3,12 +3,15 @@ import ValueService from '../services/ValueService';
 import { Authorize } from '../middleware/authorize.js'
 import CommentService from '../services/CommentService';
 import BlogService from '../services/BlogService';
+import UserService from '../services/UserService';
 
 let _commentService = new CommentService().repository
 let _blogService = new BlogService().repository
+let _userService = new UserService().repository
 
 export default class CommentController {
   constructor() {
+    this.router = express.Router()
       .get('/:id', this.getById)
       .use(Authorize.authenticated)
       .post('', this.create)
@@ -30,7 +33,7 @@ export default class CommentController {
 
   async create(req, res, next) {
     try {
-      let user = await _blogService.findById(req.session.uid);
+      let user = await _userService.findById(req.session.uid);
       req.body.author = {
         _id: req.session.uid,
         name: user.get('name')
