@@ -5,13 +5,13 @@ const ObjectId = Schema.Types.ObjectId
 const _model = new Schema({
   title: { type: String, maxlength: 60, required: true },
   summary: { type: String, maxlength: 120, required: true },
-  // authorId: { type: ObjectId, ref: 'User', required: true },
+  authorId: { type: ObjectId, ref: 'User', required: true },
   // authorName: { type: String, required: true },
-  // author: { type: Object, required: true },
-  author: {
-    _id: { type: ObjectId, ref: 'User', required: true },
-    name: { type: String, required: true }
-  },
+  author: { type: Object, required: true },
+  // author: {
+  //   _id: { type: ObjectId, ref: 'User', required: true },
+  //   name: { type: String, required: true }
+  // },
   img: { type: String, required: true },
   body: { type: String, required: true }
 }, { timestamps: true })

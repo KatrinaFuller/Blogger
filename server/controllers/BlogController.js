@@ -24,7 +24,7 @@ export default class BlogController {
   async getAll(req, res, next) {
     try {
       let data = await _blogService.find({ authorId: req.session.uid })
-        .populate('author._id', 'name')
+        .populate('authorId', 'name')
       return res.send(data)
     } catch (error) {
       next(error)
@@ -58,10 +58,10 @@ export default class BlogController {
     try {
       req.body.authorId = req.session.uid
       let user = await _UserService.findById(req.session.uid)
-      // req.body.author = {
-      //   _id: req.session.uid,
-      //   name: user.get('name')
-      // }
+      req.body.author = {
+        _id: req.session.uid,
+        name: user.get('name')
+      }
 
       let data = await _blogService.create(req.body)
       res.send(data)
