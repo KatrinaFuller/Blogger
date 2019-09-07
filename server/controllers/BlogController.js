@@ -3,9 +3,11 @@ import ValueService from '../services/ValueService';
 import { Authorize } from '../middleware/authorize.js'
 import BlogService from '../services/BlogService';
 import CommentService from '../services/CommentService';
+import UserService from '../services/UserService';
 
 let _blogService = new BlogService().repository
 let _commentService = new CommentService().repository
+let _UserService = new UserService().repository
 
 export default class BlogController {
   constructor() {
@@ -22,7 +24,7 @@ export default class BlogController {
   async getAll(req, res, next) {
     try {
       let data = await _blogService.find({ authorId: req.session.uid })
-        .populate('authorId', 'name')
+        .populate('author._id', 'name')
       return res.send(data)
     } catch (error) {
       next(error)
@@ -55,6 +57,12 @@ export default class BlogController {
   async create(req, res, next) {
     try {
       req.body.authorId = req.session.uid
+      let user = await _UserService.findById(req.session.uid)
+      // req.body.author = {
+      //   _id: req.session.uid,
+      //   name: user.get('name')
+      // }
+
       let data = await _blogService.create(req.body)
       res.send(data)
     } catch (error) {
