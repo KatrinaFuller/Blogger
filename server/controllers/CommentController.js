@@ -8,7 +8,7 @@ let _commentService = new CommentService().repository
 export default class CommentController {
   constructor() {
     this.router = express.Router()
-      .get('', this.getAll)
+      // .get('', this.getAll)
       .get('/:id', this.getById)
       .use(Authorize.authenticated)
       .post('', this.create)
@@ -16,18 +16,18 @@ export default class CommentController {
       .delete('/:id', this.delete)
   }
 
-  async getAll(req, res, next) {
-    try {
-      let data = await _commentService.find({})
-      return res.send(data)
-    } catch (error) {
-      next(error)
-    }
-  }
+  // async getAll(req, res, next) {
+  //   try {
+  //     let data = await _commentService.find({})
+  //     return res.send(data)
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
 
   async getById(req, res, next) {
     try {
-      let data = await _commentService.findById(req.params.id)
+      let data = await _commentService.findOne(req.params.id)
       if (!data) {
         throw new Error("Invalid Id")
       }
