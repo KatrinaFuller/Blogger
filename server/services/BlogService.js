@@ -13,3 +13,8 @@ const _model = new Schema({
   body: { type: String, required: true }
 }, { timestamps: true })
 
+export default class BlogService {
+  get repository() {
+    return mongoose.model('blog', _model)
+  }
+}
