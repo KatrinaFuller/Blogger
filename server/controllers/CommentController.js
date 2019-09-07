@@ -27,7 +27,9 @@ export default class CommentController {
 
   async getById(req, res, next) {
     try {
-      let data = await _commentService.findOne(req.params.id)
+      let data = await _commentService.findOne({ _id: req.params.id, authorId: req.params.uid })
+        .populate('authorId', 'name')
+        .populate('blogId', 'name')
       if (!data) {
         throw new Error("Invalid Id")
       }
