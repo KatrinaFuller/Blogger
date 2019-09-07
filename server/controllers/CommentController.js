@@ -49,8 +49,7 @@ export default class CommentController {
 
   async edit(req, res, next) {
     try {
-      let data = await _commentService.findOneAndUpdate({ _id: req.params.id, },
-        req.body, { new: true })
+      let data = await _commentService.findOneAndUpdate({ _id: req.params.id, authorId: req.session.uid }, req.body, { new: true })
       if (data) {
         return res.send(data)
       }
@@ -62,7 +61,10 @@ export default class CommentController {
 
   async delete(req, res, next) {
     try {
-      await _commentService.findOneAndRemove({ _id: req.params.id })
+      let data = await _commentService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      if (!data) {
+        throw new Error("invalid id")
+      }
       res.send("Deleted Comment")
     } catch (error) {
       next(error)
