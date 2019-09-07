@@ -31,7 +31,7 @@ export default class BlogController {
 
   async getById(req, res, next) {
     try {
-      let data = await _blogService.findOne(req.params.id)
+      let data = await _blogService.findById(req.params.id)
       if (!data) {
         throw new Error("Invalid Id")
       }
@@ -58,11 +58,34 @@ export default class BlogController {
 
   async edit(req, res, next) {
     try {
-      let data = await _blogService.findOneAndUpdate({ _id: req.params.id, }, req.body, { new: true })
+      // Only let the user edit ones the user created
+      // check that their id matches the id of the created one
+
+      // get the userId
+      let data = await _blogService.findOneAndUpdate({
+        _id: req.params.id,
+        'author._id': req.session.uid
+      }, req.body, { new: true });
       if (data) {
         return res.send(data)
       }
       throw new Error("invalid id")
+      //   let userId = req.session.uid;
+      //   let blog = await _blogService.findById(req.params.id)
+      //     .populate('author._id', 'id');
+      //   let blogUserId = blog.get('author')._id.get('id');
+
+      //   if (userId === blogUserId) {
+      //     // the user is matched
+      //     let data = await _blogService.findOneAndUpdate({ _id: req.params.id, }, req.body, { new: true })
+      //     if (data) {
+      //       return res.send(data)
+      //     }
+      //     throw new Error("Failed to save id")
+      //   } else {
+      //     // They do no own this blog post
+      //     throw new Error("invalid id")
+      //   }
     } catch (error) {
       next(error)
     }
@@ -70,7 +93,12 @@ export default class BlogController {
 
   async delete(req, res, next) {
     try {
-      let data = await _blogService.findOneAndRemove({ _id: req.params.id, authorId: req.session.uid })
+      // Only let the user delete ones the user created
+      // check that their id matches the id of the created one
+      let data = await _blogService.findOneAndRemove({
+        _id: req.params.id,
+        'author._id': req.session.uid
+      })
       if (!data) {
         throw new Error("invalid id")
       }
