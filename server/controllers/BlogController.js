@@ -62,7 +62,7 @@ export default class BlogController {
       }
 
       let data = await _blogService.create(req.body)
-      res.send(data)
+      return res.send(data)
     } catch (error) {
       next(error)
     }

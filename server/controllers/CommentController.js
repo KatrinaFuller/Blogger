@@ -38,9 +38,11 @@ export default class CommentController {
         _id: req.session.uid,
         name: user.get('name')
       }
-
-      let data = await _blogService.create(req.body)
-      res.send(data)
+      let data = await _commentService.create(req.body)
+      if (data) {
+        return res.send(data)
+      }
+      throw new Error("Failed to create comment")
     } catch (error) {
       next(error)
     }

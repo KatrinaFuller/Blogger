@@ -9,7 +9,10 @@ const _model = new Schema({
     _id: { type: ObjectId, ref: 'User', required: true },
     // _id: { type: String, required: true },
     name: { type: String, required: true }
-  }
+  },
+  // img: { type: String, required: true },
+  // summary: { type: String, required: true },
+  // title: { type: String, required: true }
 }, { timestamps: true })
 
 export default class CommentService {
